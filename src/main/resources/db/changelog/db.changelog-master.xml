@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="clob.type" value="clob" dbms="hsqldb"/>
+    <property name="clob.type" value="longtext" dbms="mysql"/>
+
+    <changeSet id="1" author="sareth" runAlways="false">
+        <createTable tableName="users">
+            <column name="userid" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="int" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_image" type="varchar(255)">
+            </column>
+            <column name="full_name" type="varchar(255)">
+            </column>
+            <column name="about" type="${clob.type}">
+            </column>
+            <column name="study_group" type="varchar(255)">
+            </column>
+            <column name="position" type="varchar(255)">
+            </column>
+            <column name="telegram_id" type="varchar(255)">
+            </column>
+        </createTable>
+
+        <!-- AUTHORTIES -->
+        <createTable tableName="user_roles">
+            <column name="user_role_id" autoIncrement="true" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="userid" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+
+        <!-- TODO !!Fix insert with liquibase
+        'priya','abc@abc.com','$2a$04$CO93CT2ObgMiSnMAWwoBkeFObJlMYi/wzzOnPlsTP44r7qVq0Jln2',1-->
+        <insert tableName="users">
+            <column name="userid">1</column>
+            <column name="username">admin</column>
+            <column name="email">job@sareth.ru</column>
+            <column name="password">$2a$04$CO93CT2ObgMiSnMAWwoBkeFObJlMYi/wzzOnPlsTP44r7qVq0Jln2</column>
+            <column name="enabled">1</column>
+            <column name="profile_image">/ext/try.png</column>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="userid">1</column>
+            <column name="role">ROLE_ADMIN</column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="userid">2</column>
+            <column name="username">user</column>
+            <column name="email">job@sareth.ru</column>
+            <column name="password">$2a$04$CO93CT2ObgMiSnMAWwoBkeFObJlMYi/wzzOnPlsTP44r7qVq0Jln2</column>
+            <column name="enabled">1</column>
+            <column name="full_name">Laboranto!</column>
+            <column name="about">Good man</column>
+            <column name="study_group">PR-55</column>
+            <column name="position">Laborant</column>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="userid">2</column>
+            <column name="role">ROLE_USER</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml " xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/header :: header"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:replace="fragments/navbar :: header_nav"></header>
+    <aside th:replace="fragments/leftbar :: l_sidebar"></aside>
+    <div sec:authorize="hasRole('ROLE_ADMIN')" th:replace="fragments/admin/dashboard :: dash"></div>
+    <div sec:authorize="!hasRole('ROLE_ADMIN') && hasRole('ROLE_USER')" th:replace="fragments/user/dashboard :: dash"></div>
+    <div sec:authorize="!hasRole('ROLE_ADMIN') && !hasRole('ROLE_USER')" th:replace="fragments/anonymous/dashboard :: dash"></div>
+</div>
+<div th:replace="fragments/plugins :: plugins_import">
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+
+
+<script sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')">
+    $("#calendar").datepicker('setDate', 'today');
+    $(document).ready(function () {
+        $('.todo-list :input:checkbox').click(function(){strikeChecked()});
+    });
+
+    function strikeChecked() {
+        $(".todo-list input:checkbox").each(function(i, item, arr) {
+            if($(item).prop('checked')){
+                $(item).parent().find(".text").css("text-decoration","line-through");
+            } else {
+                $(item).parent().find(".text").css("text-decoration","");
+            }
+        })
+    }
+</script>
+
+<script sec:authorize="hasRole('ROLE_ADMIN')">
+    $(function () {
+        CKEDITOR.replace('description');
+        $('#resolved_rate').animateNumber(
+                {
+                    number: 53,
+                },
+                10000
+        );
+    });
+    //if modal is down - select2 users
+    $('#createNewTask').on('shown.bs.modal', function () {
+        $('#users_assign').select2({
+            templateResult: formatUser,
+            multiple: true,
+            placeholder: "Assign task to users",
+            allowClear: true,
+            minimumResultsForSearch: -1
+        });
+        $('#users_watch').select2({
+            templateResult: formatUser,
+            multiple: true,
+            placeholder: "Add watchers",
+            allowClear: true,
+            minimumResultsForSearch: -1
+        });
+        $('#priority').select2({
+            templateResult: formatPriority,
+            templateSelection: formatPriority,
+            placeholder: "Priority",
+            minimumResultsForSearch: -1
+        });
+        $('#status').select2();
+
+        $(function () {
+            $('#start_from, #end_at').datetimepicker({
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                },
+                sideBySide: true,
+                format:'DD-MM-YYYY, HH:mm'
+            });
+        });
+    });
+    function formatUser (user) {
+        if (!user.id) { return user.text; }
+        return $(
+                '<span><img src="/ext/' + user.element.value.toLowerCase() + '.jpg" class="img-flag img-rounded" /> ' + user.text + '</span>'
+        );
+    }
+
+    function formatPriority(icon) {
+        var originalOption = icon.element;
+        return $('<i class="fa ' + $(originalOption).data('icon') + '" aria-hidden="true" style="color:' + $(originalOption).data('color') +'"></i> <span>' + icon.text + '</span>');
+    }
+</script>
+<style>
+    .img-flag {
+        height: 15px;
+        width: 15px;
+    }
+</style>
+</body>
+</html>

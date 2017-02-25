@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/header :: header"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:replace="fragments/navbar :: header_nav"></header>
+    <aside th:replace="fragments/leftbar :: l_sidebar"></aside>
+<div class="lc-block">
+    <div class="alert-danger">
+        <h3>You do not have permission to access this page!</h3>
+    </div>
+    <form action="/login?logout" method="post">
+        <input type="submit" class="button red big" value="Sign in as different user"/> <input
+            type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+    </div>
+</div>
+    <div th:replace="fragments/plugins :: plugins_import">
+    </div>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
